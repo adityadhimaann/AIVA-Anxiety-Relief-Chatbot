@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anxiety Relief Bot</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #1A202C;
+            color: white;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .user-message {
+            background-color: #6C63FF;
+            border-radius: 1.5rem 1.5rem 0.3rem 1.5rem;
+            align-self: flex-end;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .user-message:hover {
+            transform: translateY(-2px);
+        }
+        
+        .bot-message {
+            background-color: #4F46E5;
+            border-radius: 1.5rem 1.5rem 1.5rem 0.3rem;
+            align-self: flex-start;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .bot-message:hover {
+            transform: translateY(-2px);
+        }
+        
+        .chat-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .loading-spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid #64FFDA;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+        
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .emoji-list {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
+        .emoji-button {
+            padding: 5px 10px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .emoji-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(100, 255, 218, 0.5);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(100, 255, 218, 0.8);
+        }
+        
+        /* Typing indicator */
+        .typing-indicator {
+            display: flex;
+            gap: 3px;
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.6;
+        }
+        
+        .typing-dot:nth-child(1) {
+            animation: typing 1.5s infinite 0s;
+        }
+        
+        .typing-dot:nth-child(2) {
+            animation: typing 1.5s infinite 0.3s;
+        }
+        
+        .typing-dot:nth-child(3) {
+            animation: typing 1.5s infinite 0.6s;
+        }
+        
+        @keyframes typing {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0); }
+        }
+        
+        /* Input focus glow effect */
+        .input-glow:focus {
+            box-shadow: 0 0 15px rgba(100, 255, 218, 0.5);
+        }
+        
+        /* Message entrance animation */
+        @keyframes messageEntrance {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .message-animate {
+            animation: messageEntrance 0.3s ease-out forwards;
+        }
+        
+        /* Voice active animation */
+        .voice-active {
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(100, 255, 218, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(100, 255, 218, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(100, 255, 218, 0); }
+        }
+        
+        .mic-active {
+            color: #64FFDA;
+        }
+        
+        .speaker-active {
+            color: #64FFDA;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-indigo-200 via-purple-800 to-pink-200">
+    
+    <div class="container mx-auto p-4 max-w-3xl h-screen flex flex-col">
+        <!-- Navigation -->
+    <nav class="  z-50 py-4 px-6 flex justify-between items-center fixed top-0 left-0 w-full">
+        <div class="flex items-center">
+            <div class="mr-2">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0iYmxhY2siPjxjaXJjbGUgY3g9IjI1IiBjeT0iMjUiIHI9IjIzIiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iMTgiIGN5PSIyMCIgcj0iNSIvPjxjaXJjbGUgY3g9IjMyIiBjeT0iMjAiIHI9IjUiLz48cGF0aCBkPSJNIDE3IDMzIFEgMjUgNDAgMzMgMzMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMiIvPjxlbGxpcHNlIGN4PSIyNSIgY3k9IjEwIiByeD0iMTAiIHJ5PSI3IiBmaWxsPSJibGFjayIvPjwvc3ZnPg=="
+                    alt="Panda Logo" class="w-10 h-10">
+            </div>
+            <h1 class="text-xl font-semibold  text-black font-sans">AIVA - AI Virtual Assistant</h1>
+        </div>
+        <div class="flex space-x-8">
+            <a href="tech.html" class="text-gray-800 font-medium">TECH</a>
+            <a href="about.html" class="text-gray-800 font-medium">ABOUT</a>
+            <a href="home.html" class="text-gray-800 font-medium">HOME</a>
+        </div>
+        
+    </nav>
+    <br><br><br><br>
+        <!-- Header with animated elements -->
+        <div class="mb-6 flex justify-between items-center glass-effect p-2 rounded-2xl">
+            <div class="flex items-center">
+                <div class="relative mr-4">
+                    <img class="w-20 h-24 floating" src="panda.gif" alt="AI Assistant">
+                    <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-green-400 rounded-full border-2 border-white"></div>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-teal-300 to-violet-300">AIVA</h1>
+                    <p class="text-gray-300 text-sm">Anxiety Relief Bot</p>
+                </div>
+            </div>
+            <div class="flex flex-col items-end">
+                <div class="flex items-center space-x-2">
+                    <div class="w-3 h-3 rounded-full bg-green-400 animate-pulse"></div>
+                    <span class="text-xs text-gray-300">Online</span>
+                </div>
+                <div class="mt-2">
+                    <span class="bg-blue-600 text-xs py-1 px-2 rounded-full">AI-Powered</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Chat interface -->
+        <div class="chat-container flex-1 flex flex-col">
+            <!-- Welcome message -->
+            <div class="bg-gradient-to-r from-indigo-800 to-purple-800 p-4 border-b border-gray-700">
+                <p class="text-center text-sm">
+                    I'm here to help you manage anxiety and stress. Feel free to share what's on your mind.
+                </p>
+                <div class="emoji-list flex justify-center mt-2">
+                    <div class="emoji-button">😊 Calm</div>
+                    <div class="emoji-button">😓 Stressed</div>
+                    <div class="emoji-button">😰 Anxious</div>
+                    <div class="emoji-button">🧘 Meditation</div>
+                </div>
+            </div>
+            
+            <!-- Chat Messages Container -->
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-4 flex flex-col">
+                <!-- Default welcome message -->
+                <div class="bot-message p-3 max-w-xs message-animate">
+                    <p>Hi there! I'm AIVA, your anxiety relief assistant. How are you feeling today?</p>
+                    <button class="text-xs text-gray-300 mt-2 hover:text-white play-audio-btn">
+                        <i class="fas fa-volume-up mr-1"></i>Listen
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Input Area -->
+            <div class="p-4 border-t border-gray-700 bg-gray-800 bg-opacity-50">
+                <!-- Response Mode Toggle -->
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center">
+                        <span class="text-gray-400 mr-2 text-xs">Response Mode:</span>
+                        <select id="response-mode" class="bg-gray-700 text-white text-xs p-1 rounded-lg">
+                            <option value="sync">Instant</option>
+                        </select>
+                    </div>
+                    <div class="flex space-x-4">
+                        <button id="toggle-speaker" class="text-gray-400 hover:text-white transition-colors p-2 rounded-full" title="Toggle Text-to-Speech">
+                            <i class="fas fa-volume-up"></i>
+                        </button>
+                        <button id="toggle-mic" class="text-gray-400 hover:text-white transition-colors p-2 rounded-full" title="Toggle Speech Recognition">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Input Form -->
+                <div class="flex space-x-2 items-center">
+                    <div class="flex-1 relative">
+                        <input
+                            type="text"
+                            id="user-input"
+                            placeholder="Type your message..."
+                            class="w-full p-4 pl-5 rounded-full bg-gray-700 text-white focus:outline-none transition-all input-glow"
+                        />
+                        <button class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-teal-300 transition-colors">
+                            <i class="fas fa-face-smile"></i>
+                        </button>
+                    </div>
+                    <button
+                        id="send-button"
+                        class="p-4 bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-full hover:shadow-lg hover:opacity-90 transition-all transform hover:scale-105"
+                    >
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                
+                <!-- Voice recording indicator (hidden by default) -->
+                <div id="voice-indicator" class="mt-3 hidden">
+                    <div class="flex items-center justify-center space-x-2 p-2 rounded-lg bg-teal-900 bg-opacity-50">
+                        <div class="w-3 h-3 rounded-full bg-red-500 animate-pulse"></div>
+                        <span class="text-sm">Listening... Speak now</span>
+                        <button id="stop-recording" class="text-gray-300 hover:text-white ml-2">
+                            <i class="fas fa-stop-circle"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Quick suggestions -->
+                <div class="mt-3 flex flex-wrap gap-2">
+                    <button class="suggestion-btn text-xs bg-gray-700 hover:bg-gray-600 py-1 px-3 rounded-full transition-colors">
+                        I'm feeling anxious
+                    </button>
+                    <button class="suggestion-btn text-xs bg-gray-700 hover:bg-gray-600 py-1 px-3 rounded-full transition-colors">
+                        Help me relax
+                    </button>
+                    <button class="suggestion-btn text-xs bg-gray-700 hover:bg-gray-600 py-1 px-3 rounded-full transition-colors">
+                        Breathing exercise
+                    </button>
+                    <button class="suggestion-btn text-xs bg-gray-700 hover:bg-gray-600 py-1 px-3 rounded-full transition-colors">
+                        Tell me a calming story
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer information -->
+        <div class="mt-4 text-center text-xs text-gray-800">
+            <p>AIVA uses advanced AI to provide anxiety support. Not a substitute for professional help.</p>
+        </div>
+    </div>
+    
+    <!-- We'll keep your original script.js intact and just add what's needed -->
+    <script src="script.js"></script>
+    
+    <!-- Enhanced Voice Functionality -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Text-to-Speech Functionality
+            const speakerBtn = document.getElementById('toggle-speaker');
+            let isSpeakerEnabled = false;
+            
+            // Initialize speech synthesis
+            const synth = window.speechSynthesis || null;
+            
+            // Check if speech synthesis is supported
+            if (!synth) {
+                speakerBtn.title = "Text-to-speech not supported in this browser";
+                speakerBtn.classList.add("opacity-50");
+                speakerBtn.disabled = true;
+            } else {
+                // Handle speaker button click
+                speakerBtn.addEventListener('click', function() {
+                    isSpeakerEnabled = !isSpeakerEnabled;
+                    this.classList.toggle('speaker-active');
+                    
+                    // Visual feedback
+                    if (isSpeakerEnabled) {
+                        this.classList.add('voice-active');
+                        // Find the last bot message and speak it
+                        const lastBotMessage = document.querySelector('.bot-message:last-child p');
+                        if (lastBotMessage) {
+                            speak(lastBotMessage.textContent);
+                        }
+                    } else {
+                        this.classList.remove('voice-active');
+                        // Stop any ongoing speech
+                        if (synth.speaking) {
+                            synth.cancel();
+                        }
+                    }
+                });
+                
+                // Add event listener to all Listen buttons
+                document.addEventListener('click', function(e) {
+                    if (e.target.classList.contains('play-audio-btn') || 
+                        (e.target.parentElement && e.target.parentElement.classList.contains('play-audio-btn'))) {
+                        
+                        const messageElement = e.target.closest('.bot-message');
+                        if (messageElement) {
+                            const messageText = messageElement.querySelector('p').textContent;
+                            speak(messageText);
+                        }
+                    }
+                });
+                
+                // Add listen buttons to all bot messages on page load
+                document.querySelectorAll('.bot-message').forEach(message => {
+                    if (!message.querySelector('.play-audio-btn')) {
+                        const text = message.querySelector('p').textContent;
+                        const listenBtn = document.createElement('button');
+                        listenBtn.className = 'text-xs text-gray-300 mt-2 hover:text-white play-audio-btn';
+                        listenBtn.innerHTML = '<i class="fas fa-volume-up mr-1"></i>Listen';
+                        message.appendChild(listenBtn);
+                    }
+                });
+                
+                // Function to speak text
+                function speak(text) {
+                    if (!synth) return;
+                    
+                    // Cancel any ongoing speech
+                    if (synth.speaking) {
+                        synth.cancel();
+                    }
+                    
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.rate = 0.9; // Slightly slower for anxiety relief
+                    utterance.pitch = 1.0;
+                    
+                    // Get available voices
+                    let voices = synth.getVoices();
+                    
+                    // If voices array is empty, try again after a short delay
+                    if (voices.length === 0) {
+                        setTimeout(() => {
+                            voices = synth.getVoices();
+                            if (voices.length > 0) {
+                                selectVoiceAndSpeak();
+                            }
+                        }, 100);
+                    } else {
+                        selectVoiceAndSpeak();
+                    }
+                    
+                    function selectVoiceAndSpeak() {
+                        // Try to find a suitable female voice
+                        let selectedVoice = voices.find(v => 
+                            v.name.includes('Female') || 
+                            v.name.includes('female') || 
+                            v.name.includes('Google') || 
+                            v.name.includes('Samantha')
+                        );
+                        
+                        // Fallback to any English voice
+                        if (!selectedVoice) {
+                            selectedVoice = voices.find(v => v.lang.includes('en')) || voices[0];
+                        }
+                        
+                        if (selectedVoice) {
+                            utterance.voice = selectedVoice;
+                        }
+                        
+                        // Speak the text
+                        synth.speak(utterance);
+                    }
+                }
+                
+                // Observer to watch for new bot messages and add listen buttons
+                const messageContainer = document.getElementById('chat-messages');
+                const observer = new MutationObserver(mutations => {
+                    mutations.forEach(mutation => {
+                        if (mutation.type === 'childList') {
+                            mutation.addedNodes.forEach(node => {
+                                if (node.nodeType === 1 && node.classList.contains('bot-message')) {
+                                    // Skip if it already has a listen button
+                                    if (!node.querySelector('.play-audio-btn')) {
+                                        const listenBtn = document.createElement('button');
+                                        listenBtn.className = 'text-xs text-gray-300 mt-2 hover:text-white play-audio-btn';
+                                        listenBtn.innerHTML = '<i class="fas fa-volume-up mr-1"></i>Listen';
+                                        node.appendChild(listenBtn);
+                                    }
+                                    
+                                    // If speaker is enabled, speak this new message
+                                    if (isSpeakerEnabled) {
+                                        const messageText = node.querySelector('p').textContent;
+                                        speak(messageText);
+                                    }
+                                }
+                            });
+                        }
+                    });
+                });
+                
+                observer.observe(messageContainer, { childList: true });
+            }
+            
+            // Speech Recognition Functionality
+            const micBtn = document.getElementById('toggle-mic');
+            const voiceIndicator = document.getElementById('voice-indicator');
+            const stopRecordingBtn = document.getElementById('stop-recording');
+            const userInput = document.getElementById('user-input');
+            const sendBtn = document.getElementById('send-button');
+            
+            let recognition = null;
+            let isMicEnabled = false;
+            
+            // Initialize speech recognition if available
+            if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = 'en-US';
+                
+                // Set up recognition event handlers
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    userInput.value = transcript;
+                    voiceIndicator.classList.add('hidden');
+                    micBtn.classList.remove('mic-active', 'voice-active');
+                    isMicEnabled = false;
+                    
+                    // Auto-send after a short delay
+                    setTimeout(() => {
+                        sendBtn.click();
+                    }, 300);
+                };
+                
+                recognition.onend = function() {
+                    voiceIndicator.classList.add('hidden');
+                    micBtn.classList.remove('mic-active', 'voice-active');
+                    isMicEnabled = false;
+                };
+                
+                recognition.onerror = function(event) {
+                    console.log('Speech recognition error:', event.error);
+                    voiceIndicator.classList.add('hidden');
+                    micBtn.classList.remove('mic-active', 'voice-active');
+                    isMicEnabled = false;
+                    
+                    // Show error message
+                    if (event.error === 'not-allowed') {
+                        alert('Microphone access was denied. Please allow microphone access in your browser settings to use voice input.');
+                    } else if (event.error === 'network') {
+                        alert('Network error occurred. Please check your connection and try again.');
+                    }
+                };
+                
+                // Set up mic button click handler
+                micBtn.addEventListener('click', toggleMic);
+                stopRecordingBtn.addEventListener('click', stopRecording);
+                
+                function toggleMic() {
+                    isMicEnabled = !isMicEnabled;
+                    
+                    if (isMicEnabled) {
+                        micBtn.classList.add('mic-active', 'voice-active');
+                        voiceIndicator.classList.remove('hidden');
+                        
+                        // Start listening
+                        try {
+                            recognition.start();
+                        } catch (err) {
+                            console.error('Speech recognition error:', err);
+                            isMicEnabled = false;
+                            micBtn.classList.remove('mic-active', 'voice-active');
+                            voiceIndicator.classList.add('hidden');
+                            
+                            // Try to restart if it was already running
+                            if (err.name === 'InvalidStateError') {
+                                try {
+                                    recognition.stop();
+                                    setTimeout(() => {
+                                        recognition.start();
+                                        isMicEnabled = true;
+                                        micBtn.classList.add('mic-active', 'voice-active');
+                                        voiceIndicator.classList.remove('hidden');
+                                    }, 200);
+                                } catch (e) {
+                                    console.error('Could not restart speech recognition:', e);
+                                }
+                            }  
+                        }
+                    } else {
+                        stopRecording();
+                    }
+                }
+                
+                function stopRecording() {
+                    micBtn.classList.remove('mic-active', 'voice-active');
+                    voiceIndicator.classList.add('hidden');
+                    isMicEnabled = false;
+                    
+                    try {
+                        recognition.stop();
+                    } catch (err) {
+                        console.error('Error stopping speech recognition:', err);
+                    }
+                }
+            } else {
+                // Speech recognition not supported
+                micBtn.title = "Speech recognition not supported in this browser";
+                micBtn.classList.add("opacity-50");
+                micBtn.disabled = true;
+            }
+            
+            // Add click events to suggestion buttons
+            document.querySelectorAll('.suggestion-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    userInput.value = this.textContent.trim();
+                    userInput.focus();
+                });
+            });
+            
+            // Add click events to emoji buttons
+            document.querySelectorAll('.emoji-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    userInput.value = this.textContent.trim();
+                    userInput.focus();
+                });
+            });
+            
+            // Add Enter key support
+            userInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendBtn.click();
+                }
+            });
+            
+            // Hover animations for buttons
+            document.querySelectorAll('button:not(.suggestion-btn):not(.emoji-button)').forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    this.classList.add('scale-105');
+                });
+                button.addEventListener('mouseleave', function() {
+                    this.classList.remove('scale-105');
+                });
+            });
+            
+            // Focus effect for input
+            userInput.addEventListener('focus', function() {
+                this.parentElement.classList.add('ring-2', 'ring-teal-500');
+            });
+            userInput.addEventListener('blur', function() {
+                this.parentElement.classList.remove('ring-2', 'ring-teal-500');
+            });
+        });
+        
+        // Create a monkey patch function to modify the chat message rendering
+        // This will run after your script.js loads
+        window.addEventListener('load', function() {
+            // Check if the addMessage function exists in your original script
+            // This is a safe approach that will work even if your script structure is different
+            setTimeout(() => {
+                // Create a wrapper for adding bot messages to include the speech button
+                const originalAddMessage = function(messageText, isUser) {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = isUser ? 'user-message p-3 max-w-xs message-animate ml-auto' : 'bot-message p-3 max-w-xs message-animate';
+                    
+                    const paragraph = document.createElement('p');
+                    paragraph.textContent = messageText;
+                    messageDiv.appendChild(paragraph);
+                    
+                    // If it's a bot message, add a listen button
+                    if (!isUser) {
+                        const listenBtn = document.createElement('button');
+                        listenBtn.className = 'text-xs text-gray-300 mt-2 hover:text-white play-audio-btn';
+                        listenBtn.innerHTML = '<i class="fas fa-volume-up mr-1"></i>Listen';
+                        messageDiv.appendChild(listenBtn);
+                    }
+                    
+                    document.getElementById('chat-messages').appendChild(messageDiv);
+                    messageDiv.scrollIntoView({ behavior: 'smooth' });
+                    return messageDiv;
+                };
+                
+                // Expose this function globally so your script.js can use it if needed
+                window.enhancedAddMessage = originalAddMessage;
+            }, 500);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIVA - AI Chat Support</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-50">
+    <style>
+        .animate-up {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .animate-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const elements = document.querySelectorAll("section, nav, footer, .grid > div");
+
+            elements.forEach((el, index) => {
+                el.classList.add("animate-up");
+                setTimeout(() => {
+                    el.classList.add("visible");
+                }, index * 100); // Staggered animation
+            });
+        });
+    </script>
+    <!-- Navigation -->
+    <nav class="bg-indigo-200 z-50 py-4 px-6 flex justify-between items-center fixed top-0 left-0 w-full">
+        <div class="flex items-center">
+            <div class="mr-2">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0iYmxhY2siPjxjaXJjbGUgY3g9IjI1IiBjeT0iMjUiIHI9IjIzIiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iMTgiIGN5PSIyMCIgcj0iNSIvPjxjaXJjbGUgY3g9IjMyIiBjeT0iMjAiIHI9IjUiLz48cGF0aCBkPSJNIDE3IDMzIFEgMjUgNDAgMzMgMzMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMiIvPjxlbGxpcHNlIGN4PSIyNSIgY3k9IjEwIiByeD0iMTAiIHJ5PSI3IiBmaWxsPSJibGFjayIvPjwvc3ZnPg=="
+                    alt="Panda Logo" class="w-10 h-10">
+            </div>
+            <h1 class="text-xl font-semibold font-sans">AIVA - AI Virtual Assistant</h1>
+        </div>
+        <div class="flex space-x-8">
+            <a href="tech.html" class="text-gray-800 font-medium">TECH</a>
+            <a href="about.html" class="text-gray-800 font-medium">ABOUT</a>
+            <a href="home.html" class="text-gray-800 font-medium">BLOG</a>
+        </div>
+        <div class="flex grid-cols-2 gap-4">
+            <a href="login.html" class="bg-indigo-400 hover:bg-indigo-600 duration-500 font-semibold rounded-full p-2 pl-3 pr-3 text-white">
+                Login
+            </a>
+            <a href="signup.html" class="bg-indigo-400 rounded-full hover:bg-indigo-600 duration-500 font-semibold p-2 pl-3 pr-3 text-white">
+                Sign-Up
+            </a>
+
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="max-w-6xl mx-auto py-12 mt-12">
+        <div class="flex justify-between items-center bg-indigo-100 p-8 rounded-xl">
+            <div class="w-1/2">
+                <span id="typing-text" class="typing text-4xl font-bold"></span>
+                <!-- <h2 class="text-4xl font-bold mb-4">Chat With Our AI characters</h2> -->
+
+                <p class="text-lg mt-6 text-gray-600">
+                    AIVA AI offers characters for informative chats on topics like education, careers, and lifestyle.
+                    Whether for creative ideas, business strategies, or healthier living, our chatbot is here to assist.
+                </p>
+            </div>
+            <div class="w-1/3 bg-white p-6 rounded-lg shadow-md">
+                <p class="text-xl font-bold mb-2">How can I help?</p>
+                <p class="mb-4">What happened today?</p>
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0iYmxhY2siPjxjaXJjbGUgY3g9IjI1IiBjeT0iMjUiIHI9IjIzIiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iMTgiIGN5PSIyMCIgcj0iNSIvPjxjaXJjbGUgY3g9IjMyIiBjeT0iMjAiIHI9IjUiLz48cGF0aCBkPSJNIDE3IDMzIFEgMjUgNDAgMzMgMzMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg=="
+                    alt="Panda" class="w-16 h-16 ml-auto">
+                <button onclick="window.open('index1.html')"
+                    class="bg-indigo-400 text-white hover:bg-indigo-600 duration-500 py-2 px-4 rounded-lg w-full mt-4">Chat With AIVA</button>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- AI Characters Section -->
+    <section class="max-w-6xl mx-auto py-8">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-2xl font-bold flex items-center">
+                <span class="mr-2">🤩</span>
+                What you can do with our AI Chatbot
+            </h2>
+        </div>
+        <p class="text-gray-600 mb-8">Our AI Chatbot offers personalized support in motivation, fitness, mental health,
+            mindfulness, and emotional well-being, helping you reach your goals and improve your life.</p>
+
+        <div class="grid grid-cols-3 gap-6">
+            <!-- Mental Health Support Card -->
+            <div class="bg-indigo-100 p-6 rounded-lg">
+                <div class="flex items-center justify-between mb-4">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0iYmxhY2siPjxjaXJjbGUgY3g9IjI1IiBjeT0iMjUiIHI9IjIzIiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iMTgiIGN5PSIyMCIgcj0iNSIvPjxjaXJjbGUgY3g9IjMyIiBjeT0iMjAiIHI9IjUiLz48cGF0aCBkPSJNIDE3IDMzIFEgMjUgNDAgMzMgMzMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg=="
+                        alt="Mental Health Panda" class="w-20 h-20">
+                    <div class="bg-white rounded-full p-1">
+                        <span class="text-xl">⭐</span>
+                    </div>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Mental Health Support</h3>
+                <p class="text-gray-600 mb-4">Your empathetic AI counselor, equipped to support your mental health
+                    journey with expert knowledge in CBT, psychology, and therapy.</p>
+                <div class="flex space-x-2">
+                    <span class="bg-gray-200 px-3 py-1 rounded-full text-sm">Counselor</span>
+                    <span class="bg-gray-200 px-3 py-1 rounded-full text-sm">Mental Health</span>
+                </div>
+            </div>
+
+            <!-- Homework Hero Card -->
+            <div class="bg-yellow-50 p-6 rounded-lg">
+                <div class="flex items-center justify-between mb-4">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0iYmxhY2siPjxjaXJjbGUgY3g9IjI1IiBjeT0iMjUiIHI9IjIzIiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iMTgiIGN5PSIyMCIgcj0iNSIvPjxjaXJjbGUgY3g9IjMyIiBjeT0iMjAiIHI9IjUiLz48cGF0aCBkPSJNIDE3IDMzIFEgMjUgNDAgMzMgMzMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMiIvPjxyZWN0IHg9IjE1IiB5PSI4IiB3aWR0aD0iMjAiIGhlaWdodD0iMTAiIGZpbGw9ImJsdWUiIHJ4PSIzIi8+PC9zdmc+"
+                        alt="Homework Hero Panda" class="w-20 h-20">
+                    <div class="bg-white rounded-full p-1">
+                        <span class="text-xl">⭐</span>
+                    </div>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Homework Hero & Learning Companion</h3>
+                <p class="text-gray-600 mb-4">Your AI homework helper that's intelligent and a great explainer, helping
+                    you with schoolwork, writing essays, and academic challenges.</p>
+            </div>
+
+            <!-- Mental Health Support 2 Card -->
+            <div class="bg-green-100 p-6 rounded-lg">
+                <div class="flex items-center justify-between mb-4">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0iYmxhY2siPjxjaXJjbGUgY3g9IjI1IiBjeT0iMjUiIHI9IjIzIiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iMTgiIGN5PSIyMCIgcj0iNSIvPjxjaXJjbGUgY3g9IjMyIiBjeT0iMjAiIHI9IjUiLz48cGF0aCBkPSJNIDE3IDMzIFEgMjUgNDAgMzMgMzMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMiIvPjxjaXJjbGUgY3g9IjI1IiBjeT0iMTAiIHI9IjYiIGZpbGw9InllbGxvdyIvPjwvc3ZnPg=="
+                        alt="Mentor Panda" class="w-20 h-20">
+                    <div class="bg-white rounded-full p-1">
+                        <span class="text-xl">⭐</span>
+                    </div>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Mental Health Support</h3>
+                <p class="text-gray-600 mb-4">Your tough, no-nonsense AI mentor who pushes you to take action and get
+                    results.</p>
+                <div class="flex space-x-2">
+                    <span class="bg-gray-200 px-3 py-1 rounded-full text-sm">AI mentor</span>
+                    <span class="bg-gray-200 px-3 py-1 rounded-full text-sm">Take action</span>
+                    <span class="bg-gray-200 px-3 py-1 rounded-full text-sm">Tough</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="max-w-6xl mx-auto py-8">
+        <div class="grid grid-cols-3 gap-6">
+            <!-- Privacy Card -->
+            <div class="border border-gray-200 p-6 rounded-lg">
+                <div class="flex items-center mb-4">
+                    <div class="bg-gray-100 p-2 rounded-full mr-3">
+                        <span class="text-2xl">🔒</span>
+                    </div>
+                    <h3 class="text-xl font-bold">Privacy & Security</h3>
+                </div>
+                <p class="text-gray-600">Your privacy is our priority. Our AI chatbot uses advanced security measures to
+                    protect your data.</p>
+            </div>
+
+            <!-- Personalized Card -->
+            <div class="border border-gray-200 p-6 rounded-lg">
+                <div class="flex items-center mb-4">
+                    <div class="bg-gray-100 p-2 rounded-full mr-3">
+                        <span class="text-2xl">👤</span>
+                    </div>
+                    <h3 class="text-xl font-bold">Personalized Assistance</h3>
+                </div>
+                <p class="text-gray-600">Our free AI chatbot adapts to your preferences, providing a personalized user
+                    experience.</p>
+            </div>
+
+            <!-- Free Service Card -->
+            <div class="border border-gray-200 p-6 rounded-lg">
+                <div class="flex items-center mb-4">
+                    <div class="bg-gray-100 p-2 rounded-full mr-3">
+                        <span class="text-2xl">🎁</span>
+                    </div>
+                    <h3 class="text-xl font-bold">Cost-Free Service</h3>
+                </div>
+                <p class="text-gray-600">Experience high-quality conversations and support completely free of charge.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section class="max-w-6xl mx-auto py-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center">
+            <span class="mr-2">📚</span>
+            Read our Blog
+        </h2>
+        <div class="grid grid-cols-3 gap-6">
+            <!-- Blog Post 1 -->
+            <a href="https://tobybarrontherapy.com/blog/anxiety-relief/">
+                <div class="bg-white rounded-lg overflow-hidden shadow">
+                    <img src="https://res.cloudinary.com/toby-barron-therapy/images/f_auto,q_auto/v1667334404/media_assets/woman-with-Anxiety/woman-with-Anxiety.png?_i=AA"
+                        alt="placeholder" class="w-full h-48 object-cover" />
+                    <div class="p-4">
+                        <h3 class="text-lg font-bold mb-2">6 Codependent Friendship Signs: How to Spot and Fix Them</h3>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Blog Post 2 -->
+            <a href="https://tobybarrontherapy.com/blog/anxiety-relief/">
+                <div class="bg-white rounded-lg overflow-hidden shadow">
+                    <img src="https://res.cloudinary.com/toby-barron-therapy/images/f_auto,q_auto/v1712610088/media_assets/Anxiety-Relief/Anxiety-Relief.jpg?_i=AA"
+                        alt="placeholder" class="w-full h-48 object-cover" />
+                    <div class="p-4">
+                        <h3 class="text-lg font-bold mb-2">Intellectualizing Emotions Instead of Feeling Your Feelings?
+                        </h3>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Blog Post 3 -->
+            <a href="https://tobybarrontherapy.com/blog/anxiety-relief/">
+                <div class="bg-white rounded-lg overflow-hidden shadow">
+                    <img src="https://res.cloudinary.com/toby-barron-therapy/images/f_auto,q_auto/v1712613807/media_assets/relaxing-space-1/relaxing-space-1.jpg?_i=AA"
+                        alt="placeholder" class="w-full h-48 object-cover" />
+                    <div class="p-4">
+                        <h3 class="text-lg font-bold mb-2">Why Do I Have Commitment Issues? 8 Eye-opening Truths</h3>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Banner Section -->
+    <section class="max-w-6xl mx-auto py-8">
+        <div class="bg-amber-100 rounded-lg p-8">
+            <div class="flex">
+                <div class="w-1/2">
+                    <h2 class="text-4xl font-bold mb-2">LESS STRESS.<br>MORE FLAVOR.</h2>
+                    <p class="mb-2">Collect, organize, and cook with ease.</p>
+                    <p class="mb-6">All your favorite recipes, always within reach.</p>
+                    <div class="flex items-center mb-4">
+                        <div class="bg-white p-2 rounded-full mr-2">
+                            <span class="text-xl">👨‍🍳</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold uppercase">INSPICED</h3>
+                            <p class="text-sm">Recipe Manager</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-1/2">
+                    <img src="https://media.istockphoto.com/id/1423997728/photo/top-view-asian-man-and-woman-healthy-eating-salad-after-exercise-at-fitness-gym.jpg?s=612x612&w=0&k=20&c=abDb3WKAnawDnVikydDSN17YOZc3hsplIY65lJjNXaE="
+                        alt="Mobile app screenshot" class="ml-auto" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white py-8">
+        <div class="max-w-6xl mx-auto flex justify-center space-x-6">
+            <a href="#" class="bg-gray-100 hover:bg-gray-400 duration-500 p-2 rounded-full">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a href="#" class="bg-gray-100 p-2 hover:bg-gray-400 duration-500 rounded-full">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#" class="bg-gray-100 p-2 hover:bg-gray-400 duration-500 rounded-full">
+                <i class="fab fa-twitter"></i>
+            </a>
+            <a href="#" class="bg-gray-100 p-2 hover:bg-gray-400 duration-500 rounded-full">
+                <i class="fab fa-youtube"></i>
+            </a>
+            <a href="#" class="bg-gray-100 p-2 hover:bg-gray-400 duration-500 rounded-full">
+                <i class="fab fa-linkedin-in"></i>
+            </a>
+        </div>
+        <div class="max-w-6xl mx-auto mt-6 text-center">
+            <a href="#" class="text-gray-600 hover:text-gray-800">Privacy Policy</a>
+            <span class="mx-2 text-gray-300">|</span>
+            <a href="#" class="text-gray-600 hover:text-gray-800">Terms & Conditions</a>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const roles = ["Your Digital Anxiety Relief"];
+            let index = 0;
+            const typingElement = document.getElementById("typing-text");
+
+            if (!typingElement || roles.length === 0) return; // Prevent errors
+
+            function typeText(text) {
+                typingElement.textContent = "";
+                let i = 0;
+                const interval = setInterval(() => {
+                    typingElement.textContent += text[i];
+                    i++;
+                    if (i === text.length) {
+                        clearInterval(interval);
+                        setTimeout(eraseText, 2000); // Adjusted delay
+                    }
+                }, 100);
+            }
+
+            function eraseText() {
+                let text = typingElement.textContent;
+                let i = text.length;
+                const interval = setInterval(() => {
+                    typingElement.textContent = text.slice(0, i);
+                    i--;
+                    if (i < 0) {
+                        clearInterval(interval);
+                        index = (index + 1) % roles.length;
+                        setTimeout(() => typeText(roles[index]), 500);
+                    }
+                }, 50);
+            }
+
+            typeText(roles[index]); // Start typing automatically
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            // Sample characters data
+            const characters = [
+                {
+                    name: "Sage Panda",
+                    role: "Self-Reflection & Mindfulness",
+                    description: "Your wise AI guide who leads you through self-reflection and mindfulness, helping you discover deeper insights and find peace.",
+                    color: "bg-indigo-100"
+                },
+                {
+                    name: "PFF Panda",
+                    role: "Companionship & Emotional Support",
+                    description: "Your caring AI friend, always there to chat, share a giggle, lend an ear, and offer support, making every conversation uplifting and heartfelt.",
+                    color: "bg-teal-100"
+                },
+                {
+                    name: "Coach Panda",
+                    role: "Self-Reflection & Mindfulness",
+                    description: "Your go-to AI for fitness and wellness tips, motivating you to hit your goals and stay healthy.",
+                    color: "bg-pink-100"
+                }
+            ];
+
+            // Chat button functionality
+            const chatButton = document.querySelector('button');
+            chatButton.addEventListener('click', function () {
+                alert('Starting a chat with AIVA!');
+                // In a real application, this would open a chat interface
+            });
+        });
+    </script>
+</body>
+
+</html>
